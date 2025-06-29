@@ -3,6 +3,9 @@
   "name": "backend",
   "main": "src/index.ts",
   "compatibility_date": "2025-06-29",
+  "observability": {
+    "enabled": true
+  },
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
