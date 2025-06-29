@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "backend",
+	"name": "backend-build-frigus",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-06-28",
 	"assets": {
