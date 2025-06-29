@@ -9,7 +9,7 @@
 	"compatibility_date": "2025-06-28",
 	"assets": {
 		"binding": "ASSETS",
-		"directory": "./public"
+		// "directory": "./public"
 	},
 	"observability": {
 		"enabled": true
