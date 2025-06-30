@@ -27,8 +27,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "backend",
-      "database_id": "5d2166c1-c951-41c5-ac61-05eb22d7ea2c"
+      "database_name": "frigus-fiesta-DB",
+      "database_id": "d8f9ac08-56fe-4bbb-9348-9d0318b3d470"
     }
   ]
   // "ai": {
