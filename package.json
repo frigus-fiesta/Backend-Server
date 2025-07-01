@@ -3,7 +3,13 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "drizzle:up": "drizzle-kit up",
+    "generate": "drizzle-kit generate",
+    "amend": "drizzle-kit drop && drizzle-kit generate",
+    "studio": "drizzle-kit studio",
+    "migrate": "node scripts/execute-d1.mjs",
+    "migrate:cloudflare": "wrangler d1 execute frigus-fiesta-DB --remote --file scripts/execute-d1.mjs"
   },
   "dependencies": {
     "drizzle-orm": "^0.44.2",
@@ -11,6 +17,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250628.0",
+    "drizzle-kit": "^0.31.4",
     "wrangler": "^4.4.0"
   }
 }

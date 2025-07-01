@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1751251587485,
+      "tag": "0000_dapper_vargas",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1751251951126,
+      "tag": "0001_lush_mentor",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1751359440567,
+      "tag": "0002_overjoyed_mysterio",
+      "breakpoints": true
+    }
+  ]
+}

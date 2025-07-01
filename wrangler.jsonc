@@ -28,7 +28,8 @@
     {
       "binding": "DB",
       "database_name": "frigus-fiesta-DB",
-      "database_id": "d8f9ac08-56fe-4bbb-9348-9d0318b3d470"
+      "database_id": "d8f9ac08-56fe-4bbb-9348-9d0318b3d470",
+       "migrations_dir": "./drizzle"
     }
   ]
   // "ai": {

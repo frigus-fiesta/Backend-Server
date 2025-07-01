@@ -21,7 +21,7 @@ const app = new Hono<{ Bindings: CloudflareBindings }>()
 ```
 
 ```
-wrangler d1 create backend
-wrangler d1 execute backend --file=./schema.sql 
-
+bun drizzle-kit up  
+bun drizzle-kit generate
+bun wrangler d1 migrations apply frigus-fiesta-DB  --remote
 ```
