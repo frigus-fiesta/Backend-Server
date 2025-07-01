@@ -90,12 +90,35 @@
 // export default app;
 
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import adminRoutes from "./routes/admin";
 import generalRoutes from "./routes/general";
 
 const app = new Hono();
 
+// ✅ Enable CORS with specific origins
+app.use(
+  '*',
+  cors({
+    origin: (origin) => {
+      const allowedOrigins = [
+        "http://localhost:3000",
+        "https://frigus-fiesta-main-website.pages.dev",
+      ]
+      // Allow requests with no origin (like curl or Postman)
+      if (!origin) return "*"
+
+      return allowedOrigins.includes(origin) ? origin : ""
+    },
+    allowHeaders: ['Content-Type'],
+    allowMethods: ['GET', 'POST', 'OPTIONS'],
+    maxAge: 600,
+    credentials: true
+  })
+);
+
+// Mount routes
 app.route("/admin", adminRoutes);
-app.route("/general",generalRoutes)
+app.route("/general", generalRoutes);
 
 export default app;
