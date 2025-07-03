@@ -151,3 +151,4 @@ export const submitContactUsForm = async (c: Context) => {
     return c.json({ success: false, message: 'Internal server error. Please try again later.' }, 500);
   }
 };
+
