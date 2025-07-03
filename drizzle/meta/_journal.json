@@ -29,6 +29,20 @@
       "when": 1751538847534,
       "tag": "0003_gray_bushwacker",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1751547241194,
+      "tag": "0004_abandoned_venus",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1751547828867,
+      "tag": "0005_wise_stingray",
+      "breakpoints": true
     }
   ]
 }

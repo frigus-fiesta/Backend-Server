@@ -1,38 +1,38 @@
 import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { desc, sql } from "drizzle-orm";
 
-export const events = sqliteTable("events", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+// export const events = sqliteTable("events", {
+//   id: integer("id").primaryKey({ autoIncrement: true }),
 
-  title: text("title").notNull(),
-  tagline: text("tagline"),
-  description: text("description"),
-  slug: text("slug").notNull().unique(),
+//   title: text("title").notNull(),
+//   tagline: text("tagline"),
+//   description: text("description"),
+//   slug: text("slug").notNull().unique(),
 
-  eventStatus: text("eventStatus").notNull(), // 'upcoming' or 'past' — enforce in app logic
-  category: text("category").notNull(),
+//   eventStatus: text("eventStatus").notNull(), // 'upcoming' or 'past' — enforce in app logic
+//   category: text("category").notNull(),
 
-  eventPrice: real("eventPrice").notNull(), // no CHECK here — validate >= 0 in app
-  eventDate: text("eventDate").notNull(), // ISO datetime string
+//   eventPrice: real("eventPrice").notNull(), // no CHECK here — validate >= 0 in app
+//   eventDate: text("eventDate").notNull(), // ISO datetime string
 
-  venue: text("venue").notNull(),
+//   venue: text("venue").notNull(),
 
-  hostedBy: text("hostedBy").notNull(), // store JSON string
-  eventTimeline: text("eventTimeline").notNull(),
-  imageGallery: text("imageGallery").notNull(),
+//   hostedBy: text("hostedBy").notNull(), // store JSON string
+//   // eventTimeline: text("eventTimeline").notNull(),
+//   imageGallery: text("imageGallery").notNull(),
 
-  aboutTheHost: text("aboutTheHost"), // optional JSON
-  eventHighlights: text("eventHighlights").notNull(),
-  importantInfo: text("importantInfo").notNull(),
-  ticketPricingList: text("ticketPricingList").notNull(),
+//   aboutTheHost: text("aboutTheHost"), // optional JSON
+//   // eventHighlights: text("eventHighlights").notNull(),
+//   importantInfo: text("importantInfo").notNull(),
+//   ticketPricingList: text("ticketPricingList").notNull(),
 
-  createdAt: text("createdAt")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: text("updatedAt")
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`)
-});
+//   createdAt: text("createdAt")
+//     .notNull()
+//     .default(sql`CURRENT_TIMESTAMP`),
+//   updatedAt: text("updatedAt")
+//     .notNull()
+//     .default(sql`CURRENT_TIMESTAMP`)
+// });
 
 
 export const newsletterSubscribers = sqliteTable("newsletter_subscribers", {
@@ -55,10 +55,15 @@ export const eventInfo = sqliteTable("eventInfo",{
   description: text("description").notNull(),
   slug: text("slug").notNull().unique(),
   eventDate: text("eventDate").notNull(), // ISO datetime string
-  tagline: text("tagline"),
+  tagline: text("tagline").notNull(),
   eventStatus: text("eventStatus").notNull(), // 'upcoming' or 'past' — enforce in app logic
   category: text("category").notNull(),
   hostedBy: text("hostedBy").notNull(), // store JSON string
+  venue: text("venue"),
+  imageGallery: text("imageGallery"),
+  eventPrice: real("eventPrice"), // no CHECK here — validate >= 0 in app
+  ticketPricingList: text("ticketPricingList"),
+  importantInfo: text("importantInfo").notNull(),
   createdAt: text("createdAt")
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
