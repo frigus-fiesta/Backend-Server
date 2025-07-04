@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
-import { newsletterSubscribers, contactUs  } from '../db/schema';
+import { newsletterSubscribers, contactUs, eventInfo  } from '../db/schema';
 
 export const subscribeToNewsletter = async (c: Context) => {
   try {
@@ -152,3 +152,24 @@ export const submitContactUsForm = async (c: Context) => {
   }
 };
 
+
+export const getAllEvents = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+
+    const events = await db.select().from(eventInfo).orderBy(eventInfo.createdAt);
+
+    return c.json({
+      success: true,
+      message: 'Events retrieved successfully.',
+      data: events
+    });
+    
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error while fetching events.'
+    }, 500);
+  }
+};

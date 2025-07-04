@@ -96,7 +96,7 @@ import generalRoutes from "./routes/general";
 
 const app = new Hono();
 
-// ✅ Enable CORS with specific origins
+// Enable CORS with specific origins
 app.use(
   '*',
   cors({

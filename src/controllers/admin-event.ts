@@ -44,10 +44,10 @@ export const eventCreate = async (c: Context) => {
 
     return c.json({
       success: true,
-      message: 'Event !',
+      message: 'Event Created Successfully !',
       data: {
         id: result[0].id,
-        submittedAt: result[0].createdAt
+        CreatedAt: result[0].createdAt
       }
     });
 
