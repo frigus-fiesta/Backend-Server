@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
 import { eventInfo  } from '../db/schema';
 
-// ✅ New: Event creation endpoint
+//  Event creation endpoint
 export const eventCreate = async (c: Context) => {
   try {
     const db = drizzle(c.env.DB);
@@ -54,6 +54,86 @@ export const eventCreate = async (c: Context) => {
   } catch (error) {
     console.error('Event creation Failed:', error);
     return c.json({ success: false, message: 'Internal server error. Please try again later.' }, 500);
+  }
+};
+
+// update event By ID endpoint
+export const updateEventById = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const eventId = c.req.param('eventId');
+
+    if (!eventId || isNaN(Number(eventId))) {
+      return c.json({ success: false, message: 'Invalid or missing event ID.' }, 400);
+    }
+
+    const existingEvent = await db
+      .select()
+      .from(eventInfo)
+      .where(eq(eventInfo.id, Number(eventId)));
+
+    if (existingEvent.length === 0) {
+      return c.json({ success: false, message: `Event with ID ${eventId} not found.` }, 404);
+    }
+
+    const body = await c.req.json();
+
+    // Use the schema's insert type to get correct typings
+    type EventFields = typeof eventInfo.$inferInsert;
+
+    // Define keys that can be updated
+    const allowedKeys: (keyof EventFields)[] = [
+      'title',
+      'description',
+      'slug',
+      'eventDate',
+      'tagline',
+      'eventStatus',
+      'category',
+      'hostedBy',
+      'venue',
+      'imageGallery',
+      'eventPrice',
+      'ticketPricingList',
+      'importantInfo'
+    ];
+
+    // Build the object with type safety
+    const updatableFields: Partial<EventFields> = {};
+    for (const key of allowedKeys) {
+      if (key in body && body[key] !== undefined) {
+        updatableFields[key] = body[key];
+      }
+    }
+
+    if (Object.keys(updatableFields).length === 0) {
+      return c.json({
+        success: false,
+        message: 'No valid fields provided for update.'
+      }, 400);
+    }
+
+    updatableFields.updatedAt = new Date().toISOString();
+
+    const result = await db
+      .update(eventInfo)
+      .set(updatableFields)
+      .where(eq(eventInfo.id, Number(eventId)))
+      .returning();
+
+    return c.json({
+      success: true,
+      message: `Event with ID ${eventId} updated successfully.`,
+      data: result[0]
+    });
+
+  } catch (error) {
+    console.error('Error updating event:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.',
+      error: (error as Error).message
+    }, 500);
   }
 };
 

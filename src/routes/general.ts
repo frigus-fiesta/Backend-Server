@@ -6,6 +6,6 @@ const generalRoutes = new Hono();
 // Newsletter subscription route
 generalRoutes.post('/newsletter/subscribe', subscribeToNewsletter);
 generalRoutes.post('/contactus',submitContactUsForm);
-generalRoutes.get('/events',getAllEvents);
+generalRoutes.get('/get-all-events',getAllEvents);
 
 export default generalRoutes;
