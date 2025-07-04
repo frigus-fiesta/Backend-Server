@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { getAllEvents, submitContactUsForm, subscribeToNewsletter } from '../controllers/general';
+import { bookAppointment, getAllEvents, submitContactUsForm, subscribeToNewsletter } from '../controllers/general';
 
 const generalRoutes = new Hono();
 
@@ -7,5 +7,6 @@ const generalRoutes = new Hono();
 generalRoutes.post('/newsletter/subscribe', subscribeToNewsletter);
 generalRoutes.post('/contactus',submitContactUsForm);
 generalRoutes.get('/get-all-events',getAllEvents);
+generalRoutes.post('/book-appointment',bookAppointment)
 
 export default generalRoutes;

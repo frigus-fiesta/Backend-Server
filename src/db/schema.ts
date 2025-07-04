@@ -87,3 +87,25 @@ export const contactUs = sqliteTable("contactus", {
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
 });
+
+export const appoitmentBooking = sqliteTable("appointmentBooking", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+
+  name: text("name").notNull(),
+
+  email: text("email").notNull(),
+
+  phone: text("phone").notNull(),
+
+  services: text("services").notNull(), // store JSON string
+
+  date: text("date").notNull(), // ISO datetime string
+
+  time: text("time").notNull(), // ISO time string
+
+  description: text("description"),
+
+  createdAt: text("created_at")
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+});

@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
-import { newsletterSubscribers, contactUs, eventInfo  } from '../db/schema';
+import { newsletterSubscribers, contactUs, eventInfo, appoitmentBooking  } from '../db/schema';
 
 export const subscribeToNewsletter = async (c: Context) => {
   try {
@@ -170,6 +170,94 @@ export const getAllEvents = async (c: Context) => {
     return c.json({
       success: false,
       message: 'Internal server error while fetching events.'
+    }, 500);
+  }
+};
+
+
+export const getEventBySlug = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const slug = c.req.param('slug');
+
+    if (!slug) {
+      return c.json({ success: false, message: 'Event slug is required.' }, 400);
+    }
+
+    const event = await db
+      .select()
+      .from(eventInfo)
+      .where(eq(eventInfo.slug, slug))
+      .limit(1);
+
+    if (event.length === 0) {
+      return c.json({ success: false, message: 'Event not found.' }, 404);
+    }
+
+    return c.json({
+      success: true,
+      message: 'Event retrieved successfully.',
+      data: event[0]
+    });
+
+  } catch (error) {
+    console.error('Failed to fetch event by slug:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error while fetching event.'
+    }, 500);
+  }
+}
+
+export const bookAppointment = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const body = await c.req.json();
+    const { name, email, phone, date, time, services, description } = body;
+
+    // Basic Validation
+    if (!name || !email || !phone || !date || !time || !services) {
+      return c.json({ success: false, message: 'All fields are required.' }, 400);
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return c.json({ success: false, message: 'Invalid email address.' }, 400);
+    }
+
+    // Insert into appointmentBooking table
+    const result = await db.insert(appoitmentBooking).values({
+      name,
+      email: email.toLowerCase(),
+      phone,
+      date, // ISO format
+      time, // ISO format
+      services: JSON.stringify(services), // Store as JSON
+      description: description || '',
+      createdAt: new Date().toISOString()
+    }).returning();
+
+    return c.json({
+      success: true,
+      message: 'Appointment booked successfully!',
+      data: {
+        id: result[0].id,
+        name: result[0].name,
+        email: result[0].email,
+        phone: result[0].phone,
+        date: result[0].date,
+        time: result[0].time,
+        services: JSON.parse(result[0].services),
+        description: result[0].description,
+        createdAt: result[0].createdAt
+      }
+    });
+
+  } catch (error) {
+    console.error('Appointment booking error:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.'
     }, 500);
   }
 };
