@@ -4,13 +4,15 @@ import { Hono } from "hono";
 //   updateEventbyId,
 //   deleteEventbyId
 // } from "../controllers/admin";
-import { eventCreate, updateEventById } from "../controllers/admin-event";
+import { deleteEventById, eventCreate, updateEventById } from "../controllers/admin-event";
 
 const adminRoutes = new Hono();
 
 // POST /admin/events — Create new event
 adminRoutes.post("/events", eventCreate);
 adminRoutes.put('/events/update/:eventId', updateEventById);
+adminRoutes.delete('/events/delete/:eventId', deleteEventById);
+
 
 // PUT /admin/events/update/:eventId — Update event by ID
 // adminRoutes.put("/events/update/:eventId", updateEventbyId);

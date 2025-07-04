@@ -137,3 +137,42 @@ export const updateEventById = async (c: Context) => {
   }
 };
 
+// Delete event by ID endpoint
+export const deleteEventById = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const eventId = c.req.param('eventId');
+
+    if (!eventId || isNaN(Number(eventId))) {
+      return c.json({ success: false, message: 'Invalid or missing event ID.' }, 400);
+    }
+
+    // Check if the event exists before deletion
+    const existing = await db
+      .select()
+      .from(eventInfo)
+      .where(eq(eventInfo.id, Number(eventId)));
+
+    if (existing.length === 0) {
+      return c.json({ success: false, message: `Event with ID ${eventId} not found.` }, 404);
+    }
+
+    // Delete the event
+    await db
+      .delete(eventInfo)
+      .where(eq(eventInfo.id, Number(eventId)));
+
+    return c.json({
+      success: true,
+      message: `Event with ID ${eventId} has been deleted.`
+    });
+
+  } catch (error) {
+    console.error('Error deleting event:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error while deleting event.',
+      error: (error as Error).message
+    }, 500);
+  }
+};
