@@ -93,6 +93,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import adminRoutes from "./routes/admin";
 import generalRoutes from "./routes/general";
+import mailRoute from "./routes/mail";
 
 const app = new Hono();
 
@@ -120,5 +121,6 @@ app.use(
 // Mount routes
 app.route("/admin", adminRoutes);
 app.route("/general", generalRoutes);
+app.route('/mail',mailRoute);
 
 export default app;
