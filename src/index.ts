@@ -105,6 +105,7 @@ app.use(
       const allowedOrigins = [
         "http://localhost:3000",
         "https://frigus-fiesta-main-website.pages.dev",
+        "https://main-website-frigus-fiesta.vercel.app/"
       ]
       // Allow requests with no origin (like curl or Postman)
       if (!origin) return "*"
