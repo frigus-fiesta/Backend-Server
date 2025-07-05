@@ -2,6 +2,7 @@ import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
 import { newsletterSubscribers, contactUs, eventInfo, appoitmentBooking  } from '../db/schema';
+import { Redis } from '@upstash/redis/cloudflare';
 
 export const subscribeToNewsletter = async (c: Context) => {
   try {
@@ -173,6 +174,47 @@ export const getAllEvents = async (c: Context) => {
     }, 500);
   }
 };
+
+const redis = new Redis({
+  url: "https://evident-silkworm-49033.upstash.io",
+  token: "Ab-JAAIjcDFjNDc3N2QzNDU0MTc0YmYzOWQwNmYyNzhmY2M4YjY2YXAxMA"
+});
+
+export const getAllEventsFromCache = async (c: Context) => {
+  try {
+    const cacheKey = 'events:all';
+
+    // Try fetching from Redis
+    const cached = await redis.get(cacheKey);
+    if (cached) {
+      return c.json({
+        success: true,
+        message: 'Events retrieved from cache.',
+        data: cached
+      });
+    }
+
+    // If cache miss, query D1
+    const db = drizzle(c.env.DB);
+    const events = await db.select().from(eventInfo).orderBy(eventInfo.createdAt);
+
+    // Cache result in Redis for 60 seconds
+    await redis.set(cacheKey, events, { ex: 60 });
+
+    return c.json({
+      success: true,
+      message: 'Events retrieved from database.',
+      data: events
+    });
+  } catch (error) {
+    console.error('Failed to fetch events:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error while fetching events.'
+    }, 500);
+  }
+};
+
 
 
 export const getEventBySlug = async (c: Context) => {
