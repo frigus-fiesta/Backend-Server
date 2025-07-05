@@ -1,10 +1,14 @@
-import { Context } from 'hono'
+// Th
+// is Mail-Server is powered by Mailtrap 
+// Can handle 200 emails per day and 1000 emails per month 
+
+import { Context } from 'hono';
 
 // Mailtrap API Token (store securely in environment variable in production)
-const MAILTRAP_TOKEN = '207bdd1929062b5d1f58440bd89477ea'
+const MAILTRAP_TOKEN = '207bdd1929062b5d1f58440bd89477ea';
 
 // Optional: Template UUID from Mailtrap (for future use)
-const TEMPLATE_UUID = '3a72f511-468f-4bab-9f82-dcdceecbe4f7'
+const TEMPLATE_UUID = '3a72f511-468f-4bab-9f82-dcdceecbe4f7';
 
 
 // Main mail function

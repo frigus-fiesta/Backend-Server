@@ -1,56 +1,45 @@
+// Mail-Server is powered by Resend 
+// Can handle 100 emails per day and 3000 emails per month 
+
 import { Context } from 'hono'
+import { Resend } from 'resend'
 
 // Replace with your Resend API Key (store in env for production)
-const RESEND_API_KEY = 're_hq79DdKz_JDTajoqXJZkV5MugV15BsavC'
+// const RESEND_API_KEY = 're_hq79DdKz_JDTajoqXJZkV5MugV15BsavC'
+const RESEND_API_KEY = 're_YtNCLuRf_9ZwAuMKoLYMHfwDmmiwH5WZe'
 
-// Default sender identity from Resend verified domain
-const FROM = 'Acme <onboarding@resend.dev>'
-
-// Optional default audienceId (you can override it via body if needed)
-const DEFAULT_AUDIENCE_ID = '78261eea-8f8b-4381-83c6-79fa7120f1cf'
+// Initialize Resend client
+const resend = new Resend(RESEND_API_KEY)
 
 export const mail_server_2 = async (c: Context) => {
   try {
     const body = await c.req.json()
-    const {
-      subject,
-      html,
-      audienceId = DEFAULT_AUDIENCE_ID,
-      from = FROM
-    } = body
+    const { mail_name, subject, html, recipients } = body
 
-    if (!subject || !html || !audienceId) {
+    if (!mail_name || !subject || !html || !recipients || !Array.isArray(recipients)) {
       return c.json(
         {
           success: false,
-          error: 'Missing required fields: subject, html, or audienceId'
+          error: 'Missing required fields: mail_name, subject, html, recipients[]'
         },
         { status: 400 }
       )
     }
 
-    const response = await fetch('https://api.resend.com/emails/broadcasts', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        audience_id: audienceId,
-        from,
-        subject,
-        html
-      })
+    // Construct sender with verified domain
+    const FROM = `${mail_name} <hello@electroplix.com>`
+
+    // Use Resend SDK to send email
+    const data = await resend.emails.send({
+      from: FROM,
+      to: recipients, // Resend accepts array of email strings directly
+      subject,
+      html
     })
 
-    const result = await response.json()
-
-    if (!response.ok) {
-      return c.json({ success: false, error: result })
-    }
-
-    return c.json({ success: true, result }, { status: 200 })
-  } catch (err: any) {
-    return c.json({ success: false, error: err.toString() }, { status: 500 })
+    return c.json({ success: true, result: data }, { status: 200 })
+  } catch (error: any) {
+    console.error('Mail server error:', error)
+    return c.json({ success: false, error: error.toString() }, { status: 500 })
   }
 }
