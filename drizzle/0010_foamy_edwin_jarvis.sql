@@ -1,0 +1,1 @@
+ALTER TABLE `userProfiles` DROP COLUMN `registration_date`;

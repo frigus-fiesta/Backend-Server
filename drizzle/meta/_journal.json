@@ -71,6 +71,13 @@
       "when": 1751762123166,
       "tag": "0009_sticky_warpath",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1751762886793,
+      "tag": "0010_foamy_edwin_jarvis",
+      "breakpoints": true
     }
   ]
 }

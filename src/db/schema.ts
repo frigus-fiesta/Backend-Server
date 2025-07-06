@@ -137,7 +137,5 @@ export const userProfiles = sqliteTable("userProfiles", {
 
   email: text("email").notNull(), // comes in
 
-  registration_date: text("registration_date"),
-
   reviews: text("reviews"), // Store as JSON string
 });
