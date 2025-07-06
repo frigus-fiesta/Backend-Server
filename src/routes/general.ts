@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { bookAppointment,createProfile,
             getAllEvents, getAllEventsFromCache,
             getAllProfiles, getProfileByUUID, 
-            submitContactUsForm, subscribeToNewsletter, 
+            submitContactUsForm, submitEventReview, subscribeToNewsletter, 
             updateProfileByUUID} from '../controllers/general';
 
 const generalRoutes = new Hono();
@@ -17,5 +17,6 @@ generalRoutes.post('/create-profile',createProfile);
 generalRoutes.get('/get-all-profiles', getAllProfiles);
 generalRoutes.get('/get-user-profile-from-uuid/:uuid', getProfileByUUID);
 generalRoutes.put('/profile/update/:uuid', updateProfileByUUID);
+generalRoutes.post('/submit-event-review', submitEventReview);
 
 export default generalRoutes;

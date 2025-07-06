@@ -139,3 +139,25 @@ export const userProfiles = sqliteTable("userProfiles", {
 
   reviews: text("reviews"), // Store as JSON string
 });
+
+// Reviews table for events
+export const reviews = sqliteTable('reviews', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+
+  // The unique slug of the event being reviewed
+  review_of: text('review_of').notNull(), // references the event's `slug`
+
+  // The user who made the review
+  uuid: text('uuid').notNull(), // uuid of the user
+
+  // Review content
+  comment: text('comment').notNull(),
+
+  // Rating (1 to 5)
+  rate: integer('rate').notNull(), // Add validation logic in controller
+
+  // Timestamp of the comment
+  commented_on: text('commented_on')
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+});

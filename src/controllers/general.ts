@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
-import { eq } from 'drizzle-orm';
-import { newsletterSubscribers, contactUs, eventInfo, appoitmentBooking, userProfiles  } from '../db/schema';
+import { eq, and } from 'drizzle-orm';
+import { newsletterSubscribers, contactUs, eventInfo, appoitmentBooking, userProfiles, reviews  } from '../db/schema';
 import { Redis } from '@upstash/redis/cloudflare';
 
 export const subscribeToNewsletter = async (c: Context) => {
@@ -473,6 +473,70 @@ export const updateProfileByUUID = async (c: Context) => {
     return c.json({
       success: false,
       message: 'Internal server error. Please try again later.',
+    }, 500);
+  }
+};
+
+
+export const submitEventReview = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const body = await c.req.json();
+    const { uuid, review_of, comment, rate } = body;
+
+    // Basic validation
+    if (!uuid || !review_of || !comment || typeof rate === 'undefined') {
+      return c.json({ success: false, message: 'All fields are required.' }, 400);
+    }
+
+    // Rate must be between 1 and 5
+    if (typeof rate !== 'number' || rate < 1 || rate > 5) {
+      return c.json({ success: false, message: 'Rating must be a number between 1 and 5.' }, 400);
+    }
+
+    // Optional: prevent duplicate review by the same user for same event
+  const existingReview = await db
+    .select()
+    .from(reviews)
+    .where(
+      and(
+        eq(reviews.uuid, uuid),
+        eq(reviews.review_of, review_of)
+      )
+    );
+
+    if (existingReview.length > 0) {
+      return c.json({
+        success: false,
+        message: 'You have already submitted a review for this event.',
+      }, 409);
+    }
+
+    const result = await db
+      .insert(reviews)
+      .values({
+        uuid,
+        review_of,
+        comment,
+        rate,
+        commented_on: new Date().toISOString()
+      })
+      .returning();
+
+    return c.json({
+      success: true,
+      message: 'Your review has been submitted!',
+      data: {
+        id: result[0].id,
+        submittedAt: result[0].commented_on
+      }
+    });
+
+  } catch (error) {
+    console.error('Review submission error:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.'
     }, 500);
   }
 };
