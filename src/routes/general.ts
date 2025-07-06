@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { bookAppointment,createProfile,
             getAllEvents, getAllEventsFromCache,
             getAllProfiles, getProfileByUUID, 
+            getReviewsBySlug, 
             submitContactUsForm, submitEventReview, subscribeToNewsletter, 
             updateProfileByUUID} from '../controllers/general';
 
@@ -18,5 +19,6 @@ generalRoutes.get('/get-all-profiles', getAllProfiles);
 generalRoutes.get('/get-user-profile-from-uuid/:uuid', getProfileByUUID);
 generalRoutes.put('/profile/update/:uuid', updateProfileByUUID);
 generalRoutes.post('/submit-event-review', submitEventReview);
+generalRoutes.get('/get-event-reviews/:slug', getReviewsBySlug );
 
 export default generalRoutes;

@@ -540,3 +540,36 @@ export const submitEventReview = async (c: Context) => {
   }
 };
 
+
+export const getReviewsBySlug = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const slug = c.req.param('slug'); // extract slug from URL param
+
+    if (!slug) {
+      return c.json({
+        success: false,
+        message: 'Event slug is required.'
+      }, 400);
+    }
+
+    const reviews = await db
+      .select()
+      .from(eventReviews)
+      .where(eq(eventReviews.review_of, slug));
+
+    return c.json({
+      success: true,
+      total: reviews.length,
+      data: reviews
+    });
+
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.'
+    }, 500);
+  }
+};
+
