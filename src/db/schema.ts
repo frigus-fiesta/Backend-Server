@@ -110,17 +110,17 @@ export const appoitmentBooking = sqliteTable("appointmentBooking", {
     .default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const profilesDev = sqliteTable("profiles_dev", {
+export const userProfiles = sqliteTable("userProfiles", {
   id: integer("id").primaryKey({ autoIncrement: true }),
 
-  uuid: text("uuid").notNull(), // Composite primary key component
+  uuid: text("uuid").notNull().unique(), // Composite primary key component // comes in 
 
   created_at: text("created_at")
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
 
-  full_name: text("full_name"),
-  avatar_url: text("avatar_url"),
+  full_name: text("full_name").notNull(), // comes in
+  avatar_url: text("avatar_url"), // comes in
   phone: text("phone"),
   address: text("address"),
   city: text("city"),
@@ -131,19 +131,13 @@ export const profilesDev = sqliteTable("profiles_dev", {
 
   email_notifications: text("email_notifications"),
 
-  is_vendor: integer("is_vendor").default(0), // SQLite: 0 = false, 1 = true
-
   bio: text("bio"),
 
   user_login_info: text("user_login_info"), // SQLite doesn't support JSON natively, store as TEXT
 
-  email: text("email"),
-
-  vendor_details: text("vendor_details"),
-
-  is_registered: integer("is_registered"), // 0 or 1
+  email: text("email").notNull(), // comes in
 
   registration_date: text("registration_date"),
 
-  vendor_approval_status: text("vendor_approval_status"),
+  reviews: text("reviews"), // Store as JSON string
 });

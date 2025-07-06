@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { eq } from 'drizzle-orm';
-import { newsletterSubscribers, contactUs, eventInfo, appoitmentBooking  } from '../db/schema';
+import { newsletterSubscribers, contactUs, eventInfo, appoitmentBooking, userProfiles  } from '../db/schema';
 import { Redis } from '@upstash/redis/cloudflare';
 
 export const subscribeToNewsletter = async (c: Context) => {
@@ -297,6 +297,74 @@ export const bookAppointment = async (c: Context) => {
 
   } catch (error) {
     console.error('Appointment booking error:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.'
+    }, 500);
+  }
+};
+
+export const createProfile = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const body = await c.req.json();
+    const { full_name, email, uuid, avatar_url='https://avatar.iran.liara.run/public/boy?username=[8]' } = body;
+
+    // Basic Validation
+    if (!full_name || !email  || !uuid ) {
+      return c.json({ success: false, message: 'All fields are required.' }, 400);
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return c.json({ success: false, message: 'Invalid email address.' }, 400);
+    }
+
+    // Insert into appointmentBooking table
+    const result = await db.insert(userProfiles).values({
+      uuid,
+      full_name,
+      email: email.toLowerCase(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      avatar_url,
+    }).returning();
+
+    return c.json({
+      success: true,
+      message: 'Profile create successfully!',
+      data: {
+        id: result[0].id,
+        name: result[0].full_name,
+        email: result[0].email,
+        phone: result[0].phone,
+        createdAt: result[0].created_at
+      }
+    });
+
+  } catch (error) {
+    console.error('Profile Creation error:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.'
+    }, 500);
+  }
+};
+
+export const getAllProfiles = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+
+    // Fetch all profiles from the database
+    const profiles = await db.select().from(userProfiles).all();
+
+    return c.json({
+      success: true,
+      message: 'Profiles fetched successfully!',
+      data: profiles,
+    });
+  } catch (error) {
+    console.error('Error fetching profiles:', error);
     return c.json({
       success: false,
       message: 'Internal server error. Please try again later.'
