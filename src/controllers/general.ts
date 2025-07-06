@@ -371,3 +371,43 @@ export const getAllProfiles = async (c: Context) => {
     }, 500);
   }
 };
+
+export const getProfileByUUID = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const uuid = c.req.param('uuid'); // get the uuid from the route params
+
+    if (!uuid) {
+      return c.json({
+        success: false,
+        message: 'UUID is required.',
+      }, 400);
+    }
+
+    // Fetch the user profile where uuid matches
+    const profile = await db
+      .select()
+      .from(userProfiles)
+      .where(eq(userProfiles.uuid, uuid))
+      .get(); // `.get()` to fetch a single record
+
+    if (!profile) {
+      return c.json({
+        success: false,
+        message: 'Profile not found.',
+      }, 404);
+    }
+
+    return c.json({
+      success: true,
+      message: 'Profile fetched successfully!',
+      data: profile,
+    });
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.',
+    }, 500);
+  }
+};

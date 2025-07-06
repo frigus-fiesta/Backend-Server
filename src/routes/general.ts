@@ -1,5 +1,8 @@
 import { Hono } from 'hono';
-import { bookAppointment, createProfile, getAllEvents, getAllEventsFromCache, getAllProfiles, submitContactUsForm, subscribeToNewsletter } from '../controllers/general';
+import { bookAppointment,createProfile,
+            getAllEvents, getAllEventsFromCache,
+            getAllProfiles, getProfileByUUID, 
+            submitContactUsForm, subscribeToNewsletter } from '../controllers/general';
 
 const generalRoutes = new Hono();
 
@@ -11,5 +14,6 @@ generalRoutes.post('/book-appointment',bookAppointment)
 generalRoutes.get('/get-all-events-from-cache',getAllEventsFromCache);
 generalRoutes.post('/create-profile',createProfile);
 generalRoutes.get('/get-all-profiles', getAllProfiles);
+generalRoutes.get('/get-user-profile-from-uuid/:uuid', getProfileByUUID);
 
 export default generalRoutes;
