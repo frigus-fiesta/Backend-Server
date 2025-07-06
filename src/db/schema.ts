@@ -141,7 +141,7 @@ export const userProfiles = sqliteTable("userProfiles", {
 });
 
 // Reviews table for events
-export const reviews = sqliteTable('reviews', {
+export const eventReviews = sqliteTable('eventReviews', {
   id: integer('id').primaryKey({ autoIncrement: true }),
 
   // The unique slug of the event being reviewed
@@ -155,6 +155,9 @@ export const reviews = sqliteTable('reviews', {
 
   // Rating (1 to 5)
   rate: integer('rate').notNull(), // Add validation logic in controller
+
+  // Rating (1 to 5)
+  like_count: integer('like_count').notNull(), // Add validation logic in controller
 
   // Timestamp of the comment
   commented_on: text('commented_on')

@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import { drizzle } from 'drizzle-orm/d1';
 import { eq, and } from 'drizzle-orm';
-import { newsletterSubscribers, contactUs, eventInfo, appoitmentBooking, userProfiles, reviews  } from '../db/schema';
+import { newsletterSubscribers, contactUs, eventInfo, appoitmentBooking, userProfiles, eventReviews  } from '../db/schema';
 import { Redis } from '@upstash/redis/cloudflare';
 
 export const subscribeToNewsletter = async (c: Context) => {
@@ -489,21 +489,19 @@ export const submitEventReview = async (c: Context) => {
       return c.json({ success: false, message: 'All fields are required.' }, 400);
     }
 
-    // Rate must be between 1 and 5
     if (typeof rate !== 'number' || rate < 1 || rate > 5) {
-      return c.json({ success: false, message: 'Rating must be a number between 1 and 5.' }, 400);
+      return c.json({ success: false, message: 'Rating must be between 1 and 5.' }, 400);
     }
 
-    // Optional: prevent duplicate review by the same user for same event
-  const existingReview = await db
-    .select()
-    .from(reviews)
-    .where(
-      and(
-        eq(reviews.uuid, uuid),
-        eq(reviews.review_of, review_of)
-      )
-    );
+    const existingReview = await db
+      .select()
+      .from(eventReviews)
+      .where(
+        and(
+          eq(eventReviews.uuid, uuid),
+          eq(eventReviews.review_of, review_of)
+        )
+      );
 
     if (existingReview.length > 0) {
       return c.json({
@@ -513,12 +511,13 @@ export const submitEventReview = async (c: Context) => {
     }
 
     const result = await db
-      .insert(reviews)
+      .insert(eventReviews)
       .values({
         uuid,
         review_of,
         comment,
         rate,
+        like_count: 0, // ✅ Always initialize to 0
         commented_on: new Date().toISOString()
       })
       .returning();
@@ -540,3 +539,4 @@ export const submitEventReview = async (c: Context) => {
     }, 500);
   }
 };
+
