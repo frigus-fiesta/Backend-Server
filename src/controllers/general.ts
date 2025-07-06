@@ -411,3 +411,68 @@ export const getProfileByUUID = async (c: Context) => {
     }, 500);
   }
 };
+
+export const updateProfileByUUID = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+    const uuid = c.req.param('uuid');
+    const body = await c.req.json();
+
+    if (!uuid) {
+      return c.json({
+        success: false,
+        message: 'UUID is required.',
+      }, 400);
+    }
+
+    // Only allow specific fields to be updated
+    const allowedFields = [
+      'full_name',
+      'avatar_url',
+      'phone',
+      'address',
+      'city',
+      'state',
+      'pincode',
+      'email_notifications',
+      'bio',
+      'user_login_info',
+      'email'
+    ];
+
+    const updates: Record<string, any> = {};
+
+    for (const key of allowedFields) {
+      if (body[key] !== undefined) {
+        updates[key] = body[key];
+      }
+    }
+
+    // No valid fields to update
+    if (Object.keys(updates).length === 0) {
+      return c.json({
+        success: false,
+        message: 'No valid fields provided for update.',
+      }, 400);
+    }
+
+    // Automatically update `updated_at` field
+    updates['updated_at'] = new Date().toISOString();
+
+    const result = await db
+      .update(userProfiles)
+      .set(updates)
+      .where(eq(userProfiles.uuid, uuid));
+
+    return c.json({
+      success: true,
+      message: 'Profile updated successfully!',
+    });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.',
+    }, 500);
+  }
+};
