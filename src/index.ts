@@ -106,7 +106,7 @@ app.use(
         "http://localhost:3000",
         "https://frigus-fiesta-main-website.pages.dev",
         "https://main-website-frigus-fiesta.vercel.app",
-        "https://main-website-9sz.pages.dev"
+        "https://developer-testing-at-frigus-fiesta.pages.dev"
       ]
       // Allow requests with no origin (like curl or Postman)
       if (!origin) return "*"
