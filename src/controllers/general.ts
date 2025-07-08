@@ -314,6 +314,7 @@ export const getAllAppointments = async (c: Context) => {
     return c.json({
       success: true,
       message: 'Appointments fetched successfully!',
+      total: appointments.length,
       data: appointments,
     });
   } catch (error) {
@@ -382,6 +383,7 @@ export const getAllProfiles = async (c: Context) => {
     return c.json({
       success: true,
       message: 'Profiles fetched successfully!',
+      total: profiles.length,
       data: profiles,
     });
   } catch (error) {
