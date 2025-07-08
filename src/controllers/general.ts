@@ -303,6 +303,28 @@ export const bookAppointment = async (c: Context) => {
   }
 };
 
+// get all appointments
+export const getAllAppointments = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+
+    // Fetch all appointments from the database
+    const appointments = await db.select().from(appoitmentBooking).orderBy(appoitmentBooking.createdAt);
+
+    return c.json({
+      success: true,
+      message: 'Appointments fetched successfully!',
+      data: appointments,
+    });
+  } catch (error) {
+    console.error('Error fetching appointments:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.'
+    }, 500);
+  }
+}
+
 export const createProfile = async (c: Context) => {
   try {
     const db = drizzle(c.env.DB);

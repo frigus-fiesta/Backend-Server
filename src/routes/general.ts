@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { bookAppointment,createProfile,
+            getAllAppointments,
             getAllEvents, getAllEventsFromCache,
             getAllProfiles, getAllReviews, getProfileByUUID, 
             getReviewsBySlug, 
@@ -22,6 +23,7 @@ generalRoutes.post('/create-profile',createProfile);
 // only called on admin Dashboard
 generalRoutes.get('/get-all-profiles', getAllProfiles); 
 generalRoutes.get("/get-all-reviews",getAllReviews);
+generalRoutes.get('/get-all-appointments', getAllAppointments);
 
 // called on admin and authenticated users
 generalRoutes.get('/get-user-profile-from-uuid/:uuid', getProfileByUUID); 
