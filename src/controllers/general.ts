@@ -216,7 +216,6 @@ export const getAllEventsFromCache = async (c: Context) => {
 };
 
 
-
 export const getEventBySlug = async (c: Context) => {
   try {
     const db = drizzle(c.env.DB);
@@ -557,6 +556,30 @@ export const getReviewsBySlug = async (c: Context) => {
       .select()
       .from(eventReviews)
       .where(eq(eventReviews.review_of, slug));
+
+    return c.json({
+      success: true,
+      total: reviews.length,
+      data: reviews
+    });
+
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    return c.json({
+      success: false,
+      message: 'Internal server error. Please try again later.'
+    }, 500);
+  }
+};
+
+export const getAllReviews = async (c: Context) => {
+  try {
+    const db = drizzle(c.env.DB);
+
+    const reviews = await db
+      .select()
+      .from(eventReviews)
+      .all();
 
     return c.json({
       success: true,
