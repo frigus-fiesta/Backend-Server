@@ -500,7 +500,6 @@ export const updateProfileByUUID = async (c: Context) => {
   }
 };
 
-
 export const submitEventReview = async (c: Context) => {
   try {
     const db = drizzle(c.env.DB);
@@ -562,7 +561,6 @@ export const submitEventReview = async (c: Context) => {
     }, 500);
   }
 };
-
 
 export const getReviewsBySlug = async (c: Context) => {
   try {

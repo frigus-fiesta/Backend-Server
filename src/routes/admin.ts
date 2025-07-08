@@ -9,7 +9,7 @@ import { deleteEventById, eventCreate, updateEventById } from "../controllers/ad
 const adminRoutes = new Hono();
 
 // POST /admin/events — Create new event
-adminRoutes.post("/events", eventCreate);
+adminRoutes.post("/create-event", eventCreate);
 adminRoutes.put('/events/update/:eventId', updateEventById);
 adminRoutes.delete('/events/delete/:eventId', deleteEventById);
 
