@@ -114,7 +114,7 @@ app.use(
       return allowedOrigins.includes(origin) ? origin : ""
     },
     allowHeaders: ['Content-Type'],
-    allowMethods: ['GET', 'POST', 'OPTIONS','PUT'],
+    allowMethods: ['GET', 'POST', 'OPTIONS','PUT','DELETE'],
     maxAge: 600,
     credentials: true
   })
