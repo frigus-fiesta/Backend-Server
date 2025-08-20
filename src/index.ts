@@ -105,6 +105,8 @@ app.use(
       const allowedOrigins = [
         "http://localhost:3000",
         "https://frigus-fiesta-main-website.pages.dev",
+        "https://frigusfiesta.com",
+        "https://www.frigusfiesta.com",
         "https://main-website-frigus-fiesta.vercel.app",
         "https://developer-testing-at-frigus-fiesta.pages.dev"
       ]
