@@ -3,14 +3,8 @@
 
 import { Context } from 'hono'
 import { Resend } from 'resend'
-import * as dotenv from 'dotenv';
 
-dotenv.config();
-type Bindings = {
-  RESEND_API_KEY: string;
-}
-
-const RESEND_API_KEY = process.env.RESEND_API_KEY || ''
+const RESEND_API_KEY = 're_F9haq6uV_HUKc7KAqtDPjJ6az56cHto6q'
 
 // Initialize Resend client
 const resend = new Resend(RESEND_API_KEY)
