@@ -3,10 +3,14 @@
 
 import { Context } from 'hono'
 import { Resend } from 'resend'
+import * as dotenv from 'dotenv';
 
-// Replace with your Resend API Key (store in env for production)
-// const RESEND_API_KEY = 're_hq79DdKz_JDTajoqXJZkV5MugV15BsavC'
-const RESEND_API_KEY = 're_YtNCLuRf_9ZwAuMKoLYMHfwDmmiwH5WZe'
+dotenv.config();
+type Bindings = {
+  RESEND_API_KEY: string;
+}
+
+const RESEND_API_KEY = process.env.RESEND_API_KEY || ''
 
 // Initialize Resend client
 const resend = new Resend(RESEND_API_KEY)
@@ -27,7 +31,7 @@ export const mail_server_2 = async (c: Context) => {
     }
 
     // Construct sender with verified domain
-    const FROM = `${mail_name} <hello@electroplix.com>`
+    const FROM = `${mail_name} <hello@frigusfiesta.com>`
 
     // Use Resend SDK to send email
     const data = await resend.emails.send({
